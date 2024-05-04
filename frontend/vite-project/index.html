@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./style.css">
+    <script src="https://cdn.jsdelivr.net/npm/three-text2d@0.5.0/build/three-text2d.js"></script>
+
+
+    <title>Vite App</title>
+   
+  </head>
+  <body>
+    <div id="container">
+      <div id="textbox">
+        <div
+          id="transcriptionDiv"
+          class="textInput"
+          contenteditable
+          aria-placeholder="Start typing or talking"
+        >Start Typing Or Talking</div>
+        <p>Or</p>
+        <input class="url_input" type="text" placeholder="Enter Youtube Url"  />
+        <div class="buttons">
+          <button id="startButton" class="record_button"><span id="front1" class="front">Translate</span></button>
+          <button id="talkButton"  class="record_button"><span id="front2" class="front">Talk</span></button>
+        </div>
+      </div>
+      <div class="leftHalf">
+      <div class="videoContainer">
+        <iframe width="100%" height="100%" id="myIframe"
+src="">
+</iframe>
+      </div>
+      <canvas id="animationCanvas"></canvas>
+    </div>
+    </div>
+    <script type="module" src="/main.js"></script>
+    <script type="module" src="/transcribe.js"></script>
+  
+  </body>
+</html>
