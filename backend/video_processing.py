@@ -5,6 +5,7 @@
 import numpy as np
 import os
 import glob
+import cv2
 
 
 def check_dictionary():
@@ -31,8 +32,17 @@ def index_video():
 def create_dictionary(word_list, word_path):
     alpha = "abcdefghijklmnopqrstuvwxyz"
     for i in range(len(alpha)):
-        for word in word_list:
-            if word[0] == alpha[i]:
+        for word in word_path:
+            if word[7] == alpha[i]:
+                video = cv2.VideoCapture(word_path)
+                success, image = video.read()
+                count = 0
+                while success:
+                    cv2.imwrite("frame%d.jpg" % count, image)  # save frame as JPEG file
+                    success, image = video.read()
+                    print('Read a new frame: ', success)
+                    count += 1
+
                 # process video for that specific file
                 # append to json etc
 
