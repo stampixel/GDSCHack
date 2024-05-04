@@ -2,6 +2,8 @@ import * as THREE from "three";
 import data from './public/x.json';
 
 
+//     # coords = [{"frame": 1, "right": [[x, y, z], ... [z, y, x]], "left": []}, {"frame": 2, "right": [], "left": []}]
+
 
 let animationRunning = false;
 
@@ -81,21 +83,20 @@ function redistributeElements(left, right) {
 
 function connectParts(frameNumber) {
   const partList = [[0,1],[1,2], [2,3], [3,4], [0,5], [5,6], [6,7], [7,8], [5,9], [9,10], [10,11], [11,12], [9,13], [13,14], [14,15], [15,16], [13,17], [17,18], [18,19], [19,20], [0,17]];
-  var left = data["about"][frameNumber]['Left Hand Coordinates'];
-  var right = data["about"][frameNumber]['Right Hand Coordinates'];
+  var left = data["about"][frameNumber]['left'];
+  var right = data["about"][frameNumber]['right'];
   redistributeElements(left, right);
 
   partList.forEach(function(edge) {
     const a = edge[0];
     const b = edge[1];
     if (left[a] && left[b]) {
-      const l1 = left[a]['Coordinates'];
-      const l2 = left[b]['Coordinates'];
+      const l1 = left[a];
+      const l2 = left[b];
       drawLine(l1[0] * 50, l1[1] * -50, l1[2] * 50, l2[0] * 50, l2[1] * -50, l2[2] * 50);
     }
     if (right[a] && right[b]) {
-      const r1 = right[a]['Coordinates'];
-      const r2 = right[b]['Coordinates'];
+      const r1 = right[a];      const r2 = right[b];
       drawLine(r1[0] * 50, r1[1] * -50, r1[2] * 50, r2[0] * 50, r2[1] * -50, r2[2] * 50);
     }
   });
@@ -117,15 +118,15 @@ function animate() {
 
   if (delta > interval) {
     delta = delta % interval;
-    var left = data["about"][frameNumber]['Left Hand Coordinates'];
-    var right = data["about"][frameNumber]['Right Hand Coordinates'];
+    var left = data["about"][frameNumber]['left'];
+    var right = data["about"][frameNumber]['right'];
 
     left.forEach(function(joint) {
-      renderSphere(joint['Coordinates'][0] * 50, joint['Coordinates'][1] * -50, joint['Coordinates'][2] * 50);
+      renderSphere(joint[0] * 50, joint[1] * -50, joint[2] * 50);
     });
   
     right.forEach(function(joint) {
-      renderSphere(joint['Coordinates'][0] * 50, joint['Coordinates'][1] * -50, joint['Coordinates'][2] * 50);
+      renderSphere(joint[0] * 50, joint[1] * -50, joint[2] * 50);
     });
     connectParts(frameNumber);
 
