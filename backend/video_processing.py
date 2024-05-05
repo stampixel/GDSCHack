@@ -10,6 +10,7 @@ import mediapipe
 import mediapipe as mp
 from mediapipe.tasks import python
 from mediapipe.tasks.python import vision
+import json
 
 
 
@@ -20,6 +21,7 @@ from mediapipe.tasks.python import vision
 
 
 def index_video():
+    print("sdfdd")
     word_list = []
     word_path = []
     print(os.getcwd())
@@ -37,17 +39,25 @@ def index_video():
 def create_dictionary(word_list, word_path):
     alpha = "abcdefghijklmnopqrstuvwxyz"
     for i in range(len(alpha)):
+        word_dict = {}
         for j in range(len(word_list)):
             if word_list[j][0] == alpha[i]:
+                print(word_list[j])
+
+                # word_dict[f'{word_list[j]}'] = [[[],[],[]], [[],[],[]]]
+                word_dict[f'{word_list[j]}'] = []
+
+
                 video = cv2.VideoCapture(word_path[j])
                 success, image = video.read()
                 print(success)
                 count = 0
                 while success:
+                    # print(word_list[j])
                     # PROCESS FRAME RIGHT HERE
                     # word_data = {"word": [[[coords], [coords], []], [[], [], []]], }
                     # word list --> left | right --> list of frames ea. -->
-                    cv2.imwrite("frame%d.jpg" % count, image)  # save frame as JPEG file
+                    # cv2.imwrite("frame%d.jpg" % count, image)  # save frame as JPEG file
 
 
 
@@ -65,24 +75,34 @@ def create_dictionary(word_list, word_path):
                     detection_result = detector.detect(image)
 
                     # STEP 5: Process the classification result. In this case, visualize it.
-                    coords = draw_landmarks_on_image(image.numpy_view(), detection_result)
+                    coords = draw_landmarks_on_image(image.numpy_view(), detection_result, count)
+
+                    # coords = [[[(),(),()], []], [[], []]]
+
+                    # word_dict[word_list[j]][0][0].append(coords[0][0])
+                    # word_dict[word_list[j]][0][1].append(coords[0][1])
+                    # word_dict[word_list[j]][0][2].append(coords[0][2])
 
 
-                    print(coords)
+                    # word_dict[word_list[j]][1][0].append(coords[1][0])
+                    # word_dict[word_list[j]][1][1].append(coords[1][1])
+                    # word_dict[word_list[j]][1][2].append(coords[1][2])
+                    word_dict[word_list[j]].append(coords)
+
+
 
                     success, image = video.read()
-                    print('Read a new frame: ', success)
+                    # print('Read a new frame: ', success)
                     count += 1
-                    break
-                break
-            break
-        break
 
-        # process video for that specific file
-        # append to json etc
+        # process into jsona nd save
+        with open(f"dictionary/{alpha[i]}.json", "w") as outfile:
+            json.dump(word_dict, outfile)
 
 
-# @markdown We implemented some functions to visualize the hand landmark detection results. <br/> Run the following cell to activate the functions.
+
+
+variable_name = False
 
 from mediapipe import solutions
 from mediapipe.framework.formats import landmark_pb2
@@ -94,9 +114,10 @@ FONT_THICKNESS = 1
 HANDEDNESS_TEXT_COLOR = (88, 205, 54)  # vibrant green
 
 
-def draw_landmarks_on_image(rgb_image, detection_result):
-    # left --> 0, right --> 1
-    coords = [[[], []], [[], []]]
+def draw_landmarks_on_image(rgb_image, detection_result, count):
+    # coords = [{"frame": 1, "right": [[x, y, z], ... [z, y, x]], "left": []}, {"frame": 2, "right": [], "left": []}]
+    coords = {"frame": count, "right": [], "left": []}
+
 
     hand_landmarks_list = detection_result.hand_landmarks
     handedness_list = detection_result.handedness
@@ -107,30 +128,47 @@ def draw_landmarks_on_image(rgb_image, detection_result):
         hand_landmarks = hand_landmarks_list[idx]
         handedness = handedness_list[idx]
 
-
+        # Draw the hand landmarks.
+        hand_landmarks_proto = landmark_pb2.NormalizedLandmarkList()
+        hand_landmarks_proto.landmark.extend([
+        landmark_pb2.NormalizedLandmark(x=landmark.x, y=landmark.y, z=landmark.z) for landmark in hand_landmarks
+        ])
+        solutions.drawing_utils.draw_landmarks(
+        annotated_image,
+        hand_landmarks_proto,
+        solutions.hands.HAND_CONNECTIONS,
+        solutions.drawing_styles.get_default_hand_landmarks_style(),
+        solutions.drawing_styles.get_default_hand_connections_style())
 
         # Get the top left corner of the detected hand's bounding box.
         height, width, _ = annotated_image.shape
         x_coordinates = [landmark.x for landmark in hand_landmarks]
         y_coordinates = [landmark.y for landmark in hand_landmarks]
-        text_x = int(min(x_coordinates) * width)
-        text_y = int(min(y_coordinates) * height) - MARGIN
+        z_coordinates = [landmark.z for landmark in hand_landmarks]
 
-        print("x-coords:", x_coordinates)
-        print(len(x_coordinates))
-        print(handedness[0].category_name)
+
+
         if handedness[0].category_name.lower() == "left":
-            coords[0][0].append(x_coordinates)
-            coords[0][1].append(y_coordinates)
+            for i in range(len(x_coordinates)):
+                coords["right"].append([x_coordinates[i], y_coordinates[i], z_coordinates[i]])
+            # coords[0][0] = x_coordinates
+            # coords[0][1] = y_coordinates
+            # coords[0][2] = z_coordinates
+
         elif handedness[0].category_name.lower() == "right":
-            coords[1][0].append(x_coordinates)
-            coords[1][1].append(y_coordinates)
+            for i in range(len(x_coordinates)):
+                coords["left"].append([x_coordinates[i], y_coordinates[i], z_coordinates[i]])
+            # coords[0][0] = x_coordinates
+            # coords["left"] =
+
+            # coords[1][0] = x_coordinates
+            # coords[1][1] = y_coordinates
+            # coords[1][2] = z_coordinates
 
         # # Draw handedness (left or right hand) on the image.
         # cv2.putText(annotated_image, f"{handedness[0].category_name}",
         #             (text_x, text_y), cv2.FONT_HERSHEY_DUPLEX,
         #             FONT_SIZE, HANDEDNESS_TEXT_COLOR, FONT_THICKNESS, cv2.LINE_AA)
-
     return coords
 
 
