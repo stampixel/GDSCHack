@@ -1,38 +1,78 @@
 import * as THREE from "three";
-import a from "./public/x.json";
-import b from "./public/x.json";
-import c from "./public/x.json";
-import d from "./public/x.json";
-import e from "./public/x.json";
-import f from "./public/x.json";
-import g from "./public/x.json";
-import h from "./public/x.json";
-import i from "./public/x.json";
-import j from "./public/x.json";
-import k from "./public/x.json";
-import l from "./public/x.json";
-import m from "./public/x.json";
-import n from "./public/x.json";
-import o from "./public/x.json";
+import a from "../../backend/dictionary/a.json";
+import b from "../../backend/dictionary/b.json";
+import c from "../../backend/dictionary/c.json";
+import d from "../../backend/dictionary/d.json";
+import e from "../../backend/dictionary/e.json";
+import f from "../../backend/dictionary/f.json";
+import g from "../../backend/dictionary/g.json";
+import h from "../../backend/dictionary/h.json";
+import i from "../../backend/dictionary/i.json";
+import j from "../../backend/dictionary/j.json";
+import k from "../../backend/dictionary/k.json";
+import l from "../../backend/dictionary/l.json";
+import m from "../../backend/dictionary/m.json";
+import n from "../../backend/dictionary/n.json";
+import o from "../../backend/dictionary/o.json";
+import p from "../../backend/dictionary/p.json";
+import q from "../../backend/dictionary/q.json";
+import r from "../../backend/dictionary/r.json";
+import s from "../../backend/dictionary/s.json";
+import t from "../../backend/dictionary/t.json";
+import u from "../../backend/dictionary/u.json";
+import v from "../../backend/dictionary/v.json";
+import w from "../../backend/dictionary/w.json";
+import x from "../../backend/dictionary/x.json";
+import y from "../../backend/dictionary/y.json";
+import z from "../../backend/dictionary/z.json";
 
+const jsonFiles = {
+  a,
+  b,
+  c,
+  d,
+  e,
+  f,
+  g,
+  h,
+  i,
+  j,
+  k,
+  l,
+  m,
+  n,
+  o,
+  p,
+  q,
+  r,
+  s,
+  t,
+  u,
+  v,
+  w,
+  x,
+  y,
+  z,
+};
 
 //     # coords = [{"frame": 1, "right": [[x, y, z], ... [z, y, x]], "left": []}, {"frame": 2, "right": [], "left": []}]
 
 let animationRunning = false;
 const mouth = document.querySelector(".mouth");
-const displayWord= document.querySelector(".currentWord");
+const displayWord = document.querySelector(".currentWord");
 
 var frameNumber = 0;
 let data;
 let currentWord = 0;
 
-const sentence = ["athlete", "about"];
-let firstLetters = []
+let sentence = [];
+let firstLetters = [];
 
 var container = document.getElementById("animationCanvas");
 
 // Get the translate button
 const translateButton = document.getElementById("startButton");
+const textBox = document.getElementById("transcriptionDiv");
 
 let clock = new THREE.Clock();
 let delta = 0;
@@ -40,17 +80,44 @@ let interval = 1 / 60;
 
 //Function to start animating
 function startAnimation() {
+  if(textBox.textContent){
+    sentence = textBox.textContent.split(" ");
+  }
+  else{
+    sentence = textBox.value.split(" ");
+
+  }
   if (!animationRunning) {
     frameNumber = 0;
     for (var i = 0; i < sentence.length; i++) {
       // Iterate over numeric indexes from 0 to 5, as everyone expects.
       firstLetters.push(sentence[i][0].toLowerCase());
-  }
+    }
     animate();
     animationRunning = true;
-    translateButton.style.opacity ="0.5"
+    translateButton.style.opacity = "0.5";
   }
 }
+
+// async function importJsonFile(word) {
+//   const firstLetter = word[0].toLowerCase();
+//   if (firstLetter in jsonFiles) {
+//     try {
+//       const jsonModule = await import(a);
+//       console.log( jsonModule);
+//       return jsonModule;
+//     } catch (error) {
+//       console.error("Error loading JSON file:", error);
+//       return null;
+//     }
+//   } else {
+//     console.error("No JSON file found for the first letter:", firstLetter);
+//     return null;
+//   }
+
+// }
+
+//  importJsonFile("athlete")
 
 // Add click the translate button
 translateButton.addEventListener("click", startAnimation);
@@ -60,19 +127,18 @@ const near = 0.1;
 const far = 1000;
 
 const scene = new THREE.Scene();
-scene.background = new THREE.Color( 0xadd8e6 );
+scene.background = new THREE.Color(0xadd8e6);
 const camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
 
 const renderer = new THREE.WebGLRenderer({ canvas: container });
 renderer.setSize(container.clientWidth, container.clientHeight);
 
-
 //Dots rendering
-function renderSphere(x, y, z) {
+function renderSphere(xCord, yCord, zCord) {
   const geometry = new THREE.SphereGeometry(0.2, 32, 16);
   const material = new THREE.MeshBasicMaterial({ color: 0xb57700 });
   const sphere = new THREE.Mesh(geometry, material);
-  sphere.position.set(x, y, z);
+  sphere.position.set(xCord, yCord, zCord);
   scene.add(sphere);
 }
 
@@ -87,7 +153,7 @@ function drawLine(x1, y1, z1, x2, y2, z2) {
   //Cylinder line between dots
   const geometry = new THREE.CylinderGeometry(0.2, 0.2, vector.length(), 8);
 
-  const material = new THREE.MeshBasicMaterial({ color: 0xffcd00});
+  const material = new THREE.MeshBasicMaterial({ color: 0xffcd00 });
 
   // Create a mesh using the geometry and material
   const line = new THREE.Mesh(geometry, material);
@@ -95,7 +161,7 @@ function drawLine(x1, y1, z1, x2, y2, z2) {
   // Position the line at the midpoint between the two points
   line.position.copy(point1).add(vector.clone().multiplyScalar(0.5));
 
-  // Orient the lines 
+  // Orient the lines
   line.quaternion.setFromUnitVectors(
     new THREE.Vector3(0, 1, 0),
     vector.clone().normalize()
@@ -105,46 +171,43 @@ function drawLine(x1, y1, z1, x2, y2, z2) {
   scene.add(line);
 }
 
+startButton.addEventListener("click", mouthAnimation);
 
-startButton.addEventListener('click',mouthAnimation)
+function mouthAnimation() {
+  const mouth = document.querySelector(".mouth");
+  let isOpen = true; // Assuming mouth starts in open state
 
-
-  function mouthAnimation() {
-    const mouth = document.querySelector(".mouth");
-    let isOpen = true; // Assuming mouth starts in open state
-  
-    // Function to change mouth size and state
-    function changeMouthSize() {
-      // Toggle isOpen variable and change mouth size based on its current state
-      isOpen = !isOpen;
-      if (isOpen) {
-        mouth.style.height = '1rem'; // Set the height to open state
-      } else {
-        mouth.style.height = '3rem'; // Set the height to closed state
-      }
+  // Function to change mouth size and state
+  function changeMouthSize() {
+    // Toggle isOpen variable and change mouth size based on its current state
+    isOpen = !isOpen;
+    if (isOpen) {
+      mouth.style.height = "1rem"; // Set the height to open state
+    } else {
+      mouth.style.height = "3rem"; // Set the height to closed state
     }
-  
-    // Change mouth size every 2 seconds
-    let mouthInterval = setInterval(changeMouthSize, 2000); // Set up interval for mouth animation
-  
-    // Stop mouth animation when currentWord >= sentence.length
-      clearInterval(mouthInterval); // Stop the mouth animation
-      mouth.style.height = '3rem'; // Reset mouth size to its default
-    
   }
-  function redistributeElements(left, right) { //fixes the problem where more than 21 nodes are identified as left and lets the lines be drawn properly 
-    if (left.length > 21) {
-        const redistributedElements = left.splice(21);
-        right.push(...redistributedElements);
-    } else if (right.length > 21) {
-        const redistributedElements = right.splice(21);
-        left.push(...redistributedElements);
-    }
-}
-  
 
-function connectParts(frameNumber, word) {
-  data = firstLetters[currentWord]
+  // Change mouth size every 2 seconds
+  let mouthInterval = setInterval(changeMouthSize, 2000); // Set up interval for mouth animation
+
+  // Stop mouth animation when currentWord >= sentence.length
+  clearInterval(mouthInterval); // Stop the mouth animation
+  mouth.style.height = "3rem"; // Reset mouth size to its default
+}
+function redistributeElements(left, right) {
+  //fixes the problem where more than 21 nodes are identified as left and lets the lines be drawn properly
+  if (left.length > 21) {
+    const redistributedElements = left.splice(21);
+    right.push(...redistributedElements);
+  } else if (right.length > 21) {
+    const redistributedElements = right.splice(21);
+    left.push(...redistributedElements);
+  }
+}
+
+async function connectParts(frameNumber, word) {
+  const data = jsonFiles[firstLetters[currentWord]];
   const jointCoordinates = [
     [0, 1],
     [1, 2],
@@ -171,7 +234,6 @@ function connectParts(frameNumber, word) {
   var left = data[word][frameNumber]["left"];
   var right = data[word][frameNumber]["right"];
   redistributeElements(left, right);
-
 
   jointCoordinates.forEach(function (edge) {
     const a = edge[0];
@@ -203,30 +265,39 @@ function connectParts(frameNumber, word) {
   });
 }
 
-
-
 camera.position.set(27.5, -27, 25);
 
-function animate() {
-  data = firstLetters[currentWord]
+function delay(milliseconds){
+  return new Promise(resolve => {
+      setTimeout(resolve, milliseconds);
+  });
+}
 
+ function animate() {
+  // const data = await importJsonFile(sentence[currentWord]);
   requestAnimationFrame(animate);
   scene.children.length = 0; // Clear the scene
 
   if (animationRunning) {
+    const data = jsonFiles[firstLetters[currentWord]];
+
     delta += clock.getDelta();
-
-    if (delta > interval) {
+    if (data[sentence[currentWord].toLowerCase()]) {
+      if (delta > interval) {
         delta = delta % interval;
-        let word = sentence[currentWord];
-        displayWord.textContent = word
-        var left = data[word][frameNumber]["left"];
-        var right = data[word][frameNumber]["right"];
+        let word = sentence[currentWord].toLowerCase();
+   
+          displayWord.textContent = word
+        console.log(data[word])
+        var left = data[word][frameNumber]["left"]? data[word][frameNumber]["left"] : [];
+        var right = data[word][frameNumber]["right"] ;
 
+        //render left hand
         left.forEach(function (joint) {
           renderSphere(joint[0] * 50, joint[1] * -50, joint[2] * 50);
         });
 
+        //render right hand
         right.forEach(function (joint) {
           renderSphere(joint[0] * 50, joint[1] * -50, joint[2] * 50);
         });
@@ -234,23 +305,44 @@ function animate() {
 
         frameNumber++;
         if (frameNumber >= data[word].length) {
-          currentWord++
+          currentWord++;
           if (currentWord >= sentence.length) {
             // All words have been animated, stop the animation
             scene.children.length = 0; // Clear the scene
-            translateButton.style.opacity ="0.5"
+            translateButton.style.opacity = "0.5";
             animationRunning = false;
             currentWord = 0;
             frameNumber = 0;
             translateButton.style.opacity = 1;
-            displayWord.textContent = ""
-            mouth.style.height = '3rem'; // Reset mouth size to its default
+            displayWord.textContent = "";
+            mouth.style.height = "3rem"; // Reset mouth size to its default
+            setTimeout(()=>{     window.location.reload()},"1000")
+
           }
+          else{
           frameNumber = 0; // Reset frame number for the next word
+          }
         }
       }
+    } else {
+      currentWord++
+      if (currentWord >= sentence.length) {
+        // All words have been animated, stop the animation
+        scene.children.length = 0; // Clear the scene
+        translateButton.style.opacity = "0.5";
+        animationRunning = false;
+        currentWord = 0;
+        frameNumber = 0;
+        translateButton.style.opacity = 1;
+        displayWord.textContent = "";
+        mouth.style.height = "3rem"; // Reset mouth size to its default
+        setTimeout(()=>{     window.location.reload()},"1000")
 
-      renderer.render(scene, camera);
+      }
+
+
     }
-  }
 
+    renderer.render(scene, camera);
+  }
+}

@@ -60,7 +60,45 @@ body{
 }
 
 
+.blob {
+	background: black;
+	border-radius: 50%;
+	margin: 10px;
+	height: 20px;
+	width: 20px;
+}
 
+.blob {
+	background: rgba(255, 82, 82, 1);
+	border-radius: 50%;
+	margin: 10px;
+	height: 20px;
+	width: 20px;
+  position: absolute;
+  top:27%;
+  left:42%;
+display: none;
+	box-shadow: 0 0 0 0 rgba(255, 82, 82, 1);
+	transform: scale(1);
+	animation: pulse-red 2s infinite;
+}
+
+@keyframes pulse-red {
+	0% {
+		transform: scale(0.95);
+		box-shadow: 0 0 0 0 rgba(255, 82, 82, 0.7);
+	}
+	
+	70% {
+		transform: scale(1);
+		box-shadow: 0 0 0 10px rgba(255, 82, 82, 0);
+	}
+	
+	100% {
+		transform: scale(0.95);
+		box-shadow: 0 0 0 0 rgba(255, 82, 82, 0);
+	}
+}
 
 
 .eyeball{
@@ -68,6 +106,7 @@ body{
   width: 4rem;
   border-radius: 50%;
   background-color: black;
+  transition: 600ms ease;
 
 }
 
@@ -99,6 +138,11 @@ body{
 
 }
 
+body{
+  overflow: hidden;
+}
+
+
 .leftHalf{
   flex: 1;
   display: flex;
@@ -114,7 +158,7 @@ body{
   flex-direction: column;
   justify-content: flex-end;
   align-items: center;
-  color:#cdd1d3
+  color:rgb(201, 29, 29);
 }
 #animationCanvas {
   flex:1;

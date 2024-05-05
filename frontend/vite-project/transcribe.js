@@ -4,6 +4,8 @@ const startButton = document.getElementById('startButton');
 const talkButton  = document.getElementById('talkButton')
 const transcriptionDiv = document.getElementById('transcriptionDiv');
 const front = document.getElementById("front2");
+const blob = document.querySelector(".blob")
+
 let recognition = null;
 let isTranscribing = false; // Flag to track if transcribing is currently active
 
@@ -92,10 +94,13 @@ talkButton.addEventListener('click',()=>{
       // Start speech recognition
       recognition.start();
       front.textContent = 'Stop';
+      blob.style.display = "block"
+
     } else {
       // Stop speech recognition
       recognition.stop();
       front.textContent = 'Talk';
+      blob.style.display = "none"
     }
   } else {
     // Provide a fallback solution if SpeechRecognition is not supported
