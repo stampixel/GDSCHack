@@ -2,6 +2,85 @@ body{
   margin: 0px;
 }
 
+.smiley{
+  border-radius: 50%;
+  border: 1px solid  yellow;
+  height:19rem;
+  width:19rem;
+  position: absolute;
+  left:65%;
+  top:2%;
+  background-color: #ffcd00;
+  z-index: 0;
+}
+
+
+
+.eye{
+  border-radius: 50%;
+  border: 1px solid  black;
+  height:6rem;
+  width:6rem;
+  position: absolute;
+  background-color: white;
+
+ 
+}
+
+.mouth {
+  width: 10rem;
+  height: 4rem;
+  background-color: #b57700;
+  position: absolute;
+  top: 70%;
+  left: 25%;
+  border-bottom-left-radius: 70px;
+  border-bottom-right-radius: 70px;
+  transition: height 0.2s ease; /* Add transition for smooth animation */
+}
+
+.heading{
+  font-size: 50px;
+  text-align: left;
+  font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: rgb(255, 113, 113);
+}
+
+.mouth2{
+  width: 6rem;
+  height: 3rem;
+  background-color: red;
+  position: absolute;
+  border: 1px solid black;
+  top: 70%;
+  left: 30%;
+  border-bottom-left-radius: 90%;
+  border-bottom-right-radius: 90%;
+  transition: height 0.2s ease; /
+}
+
+
+
+
+
+.eyeball{
+  height:4rem;
+  width: 4rem;
+  border-radius: 50%;
+  background-color: black;
+
+}
+
+.eye:first-child{
+  top:20%;
+  left:15%;
+}
+
+.eye:last-child{
+  top:20%;
+  left:50%;
+}
+
 #container {
   display: flex;
   width: 100%;
@@ -9,11 +88,23 @@ body{
   overflow: hidden;
 }
 
+.currentWord{
+  position: absolute;
+  bottom:0;
+  left:73%;
+  font-size: 30px;
+  color: rgb(255, 113, 113);
+  font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-weight: 600;
+
+}
+
 .leftHalf{
   flex: 1;
   display: flex;
   flex-direction: column;
-  background-color: black;
+  background-color: lightblue;
+  border-left: 4px solid rgb(250, 166, 166);
 }
 #textbox {
   flex: 1;
@@ -23,11 +114,14 @@ body{
   flex-direction: column;
   justify-content: flex-end;
   align-items: center;
+  color:#cdd1d3
 }
 #animationCanvas {
   flex:1;
   overflow: hidden;
   border:1px solid white;
+  background-color: #add8e6;
+
 }
 
 .videoContainer{
@@ -35,12 +129,13 @@ body{
 }
 
 .record_button {
-  background: hsl(340deg 100% 32%);
+  background:  rgb(250, 166, 166);
     border-radius: 12px;
     border: none;
     padding: 0;
     cursor: pointer;
     outline-offset: 4px;
+    opacity: 1;
     
 }
 
@@ -52,7 +147,7 @@ body{
   padding: 12px 42px;
   border-radius: 12px;
   font-size: 1.25rem;
-  background: hsl(345deg 100% 47%);
+  background:  rgb(255, 86, 86);
   color: white;
   transform: translateY(-6px);
   transition: 500ms;
@@ -78,7 +173,7 @@ body{
   width: 80%;
   border-radius: 15px;
   padding: 10px;
-  border: 2px solid red;
+  border: 2px solid  rgb(250, 166, 166);
   box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;
 }
 

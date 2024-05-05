@@ -14,14 +14,15 @@
   <body>
     <div id="container">
       <div id="textbox">
+        <h1 class="heading">Serial Signer</h1>
         <div
           id="transcriptionDiv"
           class="textInput"
           contenteditable
           aria-placeholder="Start typing or talking"
         >Start Typing Or Talking</div>
-        <p>Or</p>
-        <input class="url_input" type="text" placeholder="Enter Youtube Url"  />
+        <!-- <p>Or</p>
+        <input class="url_input" type="text" placeholder="Enter Youtube Url"  /> -->
         <div class="buttons">
           <button id="startButton" class="record_button"><span id="front1" class="front">Translate</span></button>
           <button id="talkButton"  class="record_button"><span id="front2" class="front">Talk</span></button>
@@ -34,6 +35,16 @@ src="">
 </iframe>
       </div>
       <canvas id="animationCanvas"></canvas>
+      <h3 class="currentWord"></h3>
+      <div class="smiley">
+        <div class="eyes">
+        <div class="eye eye-left"><div class="eyeball"></div></div>
+        <div class="eye"><div class="eyeball"></div></div>
+      </div>
+
+      <div class="mouth">
+      </div>
+      </div>
     </div>
     </div>
     <script type="module" src="/main.js"></script>
